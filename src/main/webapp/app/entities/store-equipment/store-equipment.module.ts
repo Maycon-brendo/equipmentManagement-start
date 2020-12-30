@@ -17,5 +17,6 @@ import { storeEquipmentRoute } from './store-equipment.route';
     StoreEquipmentDeleteDialogComponent,
   ],
   entryComponents: [StoreEquipmentDeleteDialogComponent],
+  exports: [StoreEquipmentComponent],
 })
 export class EquipmentManagementStoreEquipmentModule {}

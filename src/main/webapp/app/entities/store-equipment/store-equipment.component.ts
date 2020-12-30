@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
@@ -23,6 +23,9 @@ export class StoreEquipmentComponent implements OnInit, OnDestroy {
   predicate: string;
   ascending: boolean;
 
+  @Input()
+  storeId: number | undefined;
+
   constructor(
     protected storeEquipmentService: StoreEquipmentService,
     protected eventManager: JhiEventManager,
@@ -39,6 +42,18 @@ export class StoreEquipmentComponent implements OnInit, OnDestroy {
     this.ascending = true;
   }
 
+  isValidStoreId(): boolean {
+    return this.storeId != null && this.storeId > 0;
+  }
+
+  loadData(): void {
+    if (this.isValidStoreId()) {
+      this.loadById();
+    } else {
+      this.loadAll();
+    }
+  }
+
   loadAll(): void {
     this.storeEquipmentService
       .query({
@@ -49,19 +64,30 @@ export class StoreEquipmentComponent implements OnInit, OnDestroy {
       .subscribe((res: HttpResponse<IStoreEquipment[]>) => this.paginateStoreEquipments(res.body, res.headers));
   }
 
+  loadById(): void {
+    this.storeEquipmentService
+      .query({
+        'storeId.equals': this.storeId,
+        page: this.page,
+        size: this.itemsPerPage,
+        sort: this.sort(),
+      })
+      .subscribe((res: HttpResponse<IStoreEquipment[]>) => this.paginateStoreEquipments(res.body, res.headers));
+  }
+
   reset(): void {
     this.page = 0;
     this.storeEquipments = [];
-    this.loadAll();
+    this.loadData();
   }
 
   loadPage(page: number): void {
     this.page = page;
-    this.loadAll();
+    this.loadData();
   }
 
   ngOnInit(): void {
-    this.loadAll();
+    this.loadData();
     this.registerChangeInStoreEquipments();
   }
 

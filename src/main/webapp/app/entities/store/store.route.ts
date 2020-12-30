@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, Routes, Router } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot, Routes, Router, RouterModule } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
@@ -34,7 +34,7 @@ export class StoreResolve implements Resolve<IStore> {
   }
 }
 
-export const storeRoute: Routes = [
+const storeRoute: Routes = [
   {
     path: '',
     component: StoreComponent,
@@ -82,3 +82,8 @@ export const storeRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
 ];
+@NgModule({
+  imports: [RouterModule.forChild(storeRoute)],
+  exports: [RouterModule],
+})
+export class StoreRoute {}

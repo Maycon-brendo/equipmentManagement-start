@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +61,7 @@ public class StoreEquipmentResource {
         if (storeEquipment.getId() != null) {
             throw new BadRequestAlertException("A new storeEquipment cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        this.storeEquipmentService.validateByEquipmamentName("Ar Condicionado Central",storeEquipment);
         StoreEquipment result = storeEquipmentService.save(storeEquipment);
         return ResponseEntity.created(new URI("/api/store-equipments/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
